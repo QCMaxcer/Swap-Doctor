@@ -26,3 +26,11 @@ Date: 2026-10-25
 - Removed restrictive `dependencyResolutionManagement` from `settings.gradle` so Loom/build repositories are not suppressed; official Mojang mappings declaration remains unchanged.
 - Removed the missing icon metadata reference (minimal valid packaging fix).
 - Re-ran with `JAVA_HOME=C:\Program Files\Eclipse Adoptium\jdk-25.0.3.9-hotspot`: `./gradlew --version` PASS (Gradle 9.8.2, JVM 25.0.3). `./gradlew check` still fails during configuration because upstream repositories do not contain `loom:mappings:layered+hash.253056520`; no alternate mappings were substituted.
+
+## Fix round 2 evidence
+
+- Rewrote `settings.gradle` to retain only `pluginManagement`; removed the entire `dependencyResolutionManagement`/`PREFER_SETTINGS` block so Loom-added repositories are honored.
+- Kept Cloth Config and Mod Menu repositories in `build.gradle`.
+- Exact command: `$env:JAVA_HOME='C:\Program Files\Eclipse Adoptium\jdk-25.0.3.9-hotspot'; ./gradlew check --no-daemon`
+- Result: **BUILD SUCCESSFUL in 4s** (Gradle 9.8.2, Fabric Loom 1.19.3; `:compileJava`, `:processResources`, and `:check` completed; test tasks had no sources).
+- The earlier mappings resolution issue did not recur after this template-aligned settings change.
