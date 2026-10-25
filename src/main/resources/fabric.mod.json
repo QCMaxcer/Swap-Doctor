@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "id": "swapdoctor",
+  "version": "${version}",
+  "name": "Swap Doctor",
+  "description": "Client-only timing diagnostics for attribute-swapping practice.",
+  "authors": ["Swap Doctor"],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/swapdoctor/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "cn.swapdoctor.SwapDoctorClient"
+    ]
+  },
+  "mixins": [
+    "swapdoctor.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.20.1",
+    "minecraft": "1.21.11",
+    "fabric-api": "*",
+    "cloth-config": ">=21.11.160"
+  },
+  "suggests": {
+    "modmenu": "*"
+  }
+}
