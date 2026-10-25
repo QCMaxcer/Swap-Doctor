@@ -7,7 +7,6 @@
   "authors": ["Swap Doctor"],
   "contact": {},
   "license": "MIT",
-  "icon": "assets/swapdoctor/icon.png",
   "environment": "client",
   "entrypoints": {
     "client": [

@@ -19,3 +19,10 @@ Date: 2026-10-25
 ## Commit
 
 `122bde30b58bd93a8d97f2d68395e1f6a88e473d` — `chore: scaffold Swap Doctor Fabric project`
+
+## Round 1 fixes (review follow-up)
+
+- Removed machine-specific `org.gradle.java.home` from `gradle.properties`; README now documents Java 21 JDK/JAVA_HOME expectation.
+- Removed restrictive `dependencyResolutionManagement` from `settings.gradle` so Loom/build repositories are not suppressed; official Mojang mappings declaration remains unchanged.
+- Removed the missing icon metadata reference (minimal valid packaging fix).
+- Re-ran with `JAVA_HOME=C:\Program Files\Eclipse Adoptium\jdk-25.0.3.9-hotspot`: `./gradlew --version` PASS (Gradle 9.8.2, JVM 25.0.3). `./gradlew check` still fails during configuration because upstream repositories do not contain `loom:mappings:layered+hash.253056520`; no alternate mappings were substituted.

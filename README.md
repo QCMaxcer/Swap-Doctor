@@ -12,3 +12,5 @@ It reports **local timing only**: a timing pass means that a local switch and mo
 - Checks: `./gradlew check`
 
 Cloth Config is required at runtime for settings. Mod Menu is optional and compile-only; the default K key opens the settings screen.
+
+Build requires a Java 21 JDK available via JAVA_HOME (or another Java 21-compatible Gradle runtime); no machine-specific JDK path is configured.
