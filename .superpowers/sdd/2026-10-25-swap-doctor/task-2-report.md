@@ -8,3 +8,6 @@ Implemented dependency-free core records/enums and `SwapMatcher` with nearest on
 
 ## Verification
 `JAVA_HOME='C:\\Program Files\\Eclipse Adoptium\\jdk-25.0.3.9-hotspot'; ./gradlew test --no-daemon` — BUILD SUCCESSFUL (6 tests).
+
+## Round 1 Fix (2026-10-26)
+RED: Added strict malformed field-bearing JSON, inclusive boundary, and nearest one-to-one/no-reuse tests; malformed and nearest tests failed against prior implementation. GREEN: ConfigStore now rejects missing braces/trailing content and malformed object members via strict minimal parser; matcher boundary/nearest tests pass. Full suite: ./gradlew test --no-daemon — BUILD SUCCESSFUL (9 tests).
