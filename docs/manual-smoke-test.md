@@ -18,7 +18,7 @@ This checklist validates the client-only timing behavior in a Minecraft 1.21.11 
 
 ## Input and timing matrix
 
-Use a hotbar slot change or **F** hand swap followed by the listed mouse input. Repeat with the mouse input first.
+Use a number-key or mouse-wheel hotbar change, or **F** hand swap, followed by the listed mouse input. Repeat with the mouse input first.
 
 | Case | Expected result |
 | --- | --- |
