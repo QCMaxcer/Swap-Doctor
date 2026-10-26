@@ -9,12 +9,14 @@ import cn.swapdoctor.core.SwapMatcher;
 import cn.swapdoctor.core.SwitchEvent;
 import cn.swapdoctor.core.TimingResult;
 import java.util.Optional;
+import java.util.OptionalLong;
 import net.minecraft.client.Minecraft;
 
 /** Bridges client input hooks to the Minecraft-free timing matcher. */
 public final class InputTracker {
     public static final InputTracker INSTANCE = new InputTracker();
     private final InputGate gate = new InputGate();
+    private final PendingActionInputs pendingActions = new PendingActionInputs();
     private SwapMatcher matcher;
     private Optional<TimingResult> latest = Optional.empty();
     private long tickId;
@@ -27,6 +29,7 @@ public final class InputTracker {
 
     public void beginTick(Minecraft client) {
         tickId++;
+        pendingActions.discardBefore(tickId);
         refreshGate();
         if (!gate.allow()) clearMatcherState();
     }
@@ -41,7 +44,9 @@ public final class InputTracker {
     public void endInputContext() { inputContext = false; }
 
     public void recordMousePress(ActionButton button, long eventTick, long nanoTime) {
-        recordAction(button, button == ActionButton.LEFT ? ActionKind.ATTACK : ActionKind.USE, eventTick, nanoTime);
+        refreshGate();
+        if (!gate.allow()) return;
+        pendingActions.add(button == ActionButton.LEFT ? ActionKind.ATTACK : ActionKind.USE, eventTick, nanoTime);
     }
 
     public void recordAttack(long eventTick, long nanoTime) {
@@ -55,7 +60,9 @@ public final class InputTracker {
     public void recordAction(ActionButton button, ActionKind kind, long eventTick, long nanoTime) {
         refreshGate();
         if (!gate.allow()) return;
-        matcher.onAction(new ActionEvent(nanoTime, eventTick, button, kind))
+        OptionalLong rawInputTime = pendingActions.consume(kind, eventTick);
+        long measuredNanoTime = rawInputTime.orElse(nanoTime);
+        matcher.onAction(new ActionEvent(measuredNanoTime, eventTick, button, kind))
                 .ifPresent(result -> latest = Optional.of(result));
     }
 
@@ -87,13 +94,13 @@ public final class InputTracker {
     }
 
     public Optional<TimingResult> latestResult() { return latest; }
-    public void setThreshold(int maxDelayMs) { matcher = new SwapMatcher(maxDelayMs); latest = Optional.empty(); }
+    public void setThreshold(int maxDelayMs) { matcher = new SwapMatcher(maxDelayMs); latest = Optional.empty(); pendingActions.clear(); }
 
     static boolean hasScrollDelta(double verticalDelta) {
         return Double.isFinite(verticalDelta) && verticalDelta != 0.0;
     }
 
-    private void clearMatcherState() { matcher.reset(); latest = Optional.empty(); }
+    private void clearMatcherState() { matcher.reset(); latest = Optional.empty(); pendingActions.clear(); }
 
     private void refreshGate() {
         try {

@@ -42,6 +42,6 @@ public final class SwapDoctorHud implements HudElement {
     }
 
     static String formatDelta(double deltaMs) {
-        return String.format(Locale.ROOT, "%+.3f", deltaMs);
+        return String.format(Locale.ROOT, "%+.3f ms", deltaMs);
     }
 }
