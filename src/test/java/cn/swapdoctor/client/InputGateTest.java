@@ -4,6 +4,12 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 final class InputGateTest {
+    @Test void onlyNonZeroScrollIsAHotbarInput() {
+        assertTrue(InputTracker.hasScrollDelta(1.0));
+        assertTrue(InputTracker.hasScrollDelta(-1.0));
+        assertFalse(InputTracker.hasScrollDelta(0.0));
+    }
+
     @Test void allowsOnlyFocusedGameplayWithoutScreenOrPause() {
         InputGate gate = new InputGate();
         gate.setGameplay(true);

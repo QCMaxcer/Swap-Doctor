@@ -52,6 +52,13 @@ public final class InputTracker {
                 .ifPresent(result -> latest = Optional.of(result));
     }
 
+    public void recordHotbarScroll(double verticalDelta, long eventTick, long nanoTime) {
+        refreshGate();
+        if (!hasScrollDelta(verticalDelta) || !gate.allow()) return;
+        matcher.onSwitch(new SwitchEvent(nanoTime, eventTick, SwapKind.HOTBAR))
+                .ifPresent(result -> latest = Optional.of(result));
+    }
+
     public void recordHandSwap(long eventTick, long nanoTime) {
         refreshGate();
         if (!inputContext || !gate.allow()) return;
@@ -67,6 +74,10 @@ public final class InputTracker {
 
     public Optional<TimingResult> latestResult() { return latest; }
     public void setThreshold(int maxDelayMs) { matcher = new SwapMatcher(maxDelayMs); latest = Optional.empty(); }
+
+    static boolean hasScrollDelta(double verticalDelta) {
+        return Double.isFinite(verticalDelta) && verticalDelta != 0.0;
+    }
 
     private void clearMatcherState() { matcher.reset(); latest = Optional.empty(); }
 

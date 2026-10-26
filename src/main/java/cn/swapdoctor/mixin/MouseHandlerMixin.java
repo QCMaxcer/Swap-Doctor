@@ -23,4 +23,10 @@ public final class MouseHandlerMixin {
         if (mapped != null) SwapDoctorClient.TRACKER.recordMousePress(mapped,
                 SwapDoctorClient.TRACKER.tick(), System.nanoTime());
     }
+
+    @Inject(method = "onScroll", at = @At("HEAD"))
+    private void swapdoctor$recordHotbarScroll(long window, double horizontal, double vertical, CallbackInfo ci) {
+        SwapDoctorClient.TRACKER.recordHotbarScroll(vertical,
+                SwapDoctorClient.TRACKER.tick(), System.nanoTime());
+    }
 }
