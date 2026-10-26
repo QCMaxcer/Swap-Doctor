@@ -17,8 +17,8 @@ import net.minecraft.resources.Identifier;
 /** Renders the most recent local timing result without changing matcher state. */
 public final class SwapDoctorHud implements HudElement {
     private static final Identifier ID = Identifier.fromNamespaceAndPath("swapdoctor", "timing_hud");
-    private static final int PASS_COLOR = 0x55FF55;
-    private static final int FAIL_COLOR = 0xFF5555;
+    private static final int PASS_COLOR = 0xFF55FF55;
+    private static final int FAIL_COLOR = 0xFFFF5555;
 
     public static void register() {
         HudElementRegistry.attachElementAfter(VanillaHudElements.HOTBAR, ID, new SwapDoctorHud());
@@ -37,7 +37,11 @@ public final class SwapDoctorHud implements HudElement {
 
         Minecraft client = Minecraft.getInstance();
         context.drawString(client.font, message(result, config.maxDelayMs), 8, 8,
-                result.passed() ? PASS_COLOR : FAIL_COLOR, true);
+                colorFor(result.status()), true);
+    }
+
+    static int colorFor(TimingResult.Status status) {
+        return status == TimingResult.Status.TIMING_PASS ? PASS_COLOR : FAIL_COLOR;
     }
 
     static String formatDelta(double deltaMs) {

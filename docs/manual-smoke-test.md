@@ -44,4 +44,4 @@ Record the client version, Java version, config file contents, and a screenshot 
 
 - `./gradlew clean check build --no-daemon` — passed.
 - `./gradlew runClient --no-daemon` — reached the render-thread/title startup without Swap Doctor entrypoint or mixin errors; interactive cases above still require a playable in-world session.
-- Artifact SHA-256 (`build/libs/swap-doctor-1.0.0.jar`): `3238E20C024D763181508B0C7B82687C77D9EDEA167A0293C51E85ABD505D97B`.
+- Artifact SHA-256 (`build/libs/swap-doctor-1.0.0.jar`): `67310A0A438DD6A1510BD4EC59B5990434C676E7C9C822E88D0F495B70E0A618`.

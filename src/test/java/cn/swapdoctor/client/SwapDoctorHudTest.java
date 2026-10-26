@@ -20,4 +20,10 @@ class SwapDoctorHudTest {
         assertEquals("swapdoctor.direction.click_first",
                 SwapDoctorHud.directionKey(TimingResult.Direction.ACTION_THEN_SWITCH));
     }
+
+    @Test
+    void hudColorsAreOpaqueArgbValues() {
+        assertEquals(0xFF, (SwapDoctorHud.colorFor(TimingResult.Status.TIMING_PASS) >>> 24) & 0xFF);
+        assertEquals(0xFF, (SwapDoctorHud.colorFor(TimingResult.Status.TIMING_FAIL_CROSS_TICK) >>> 24) & 0xFF);
+    }
 }
