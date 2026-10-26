@@ -17,7 +17,7 @@ Cloth Config is required at runtime for settings. Mod Menu is optional and compi
 
 - Press **K** in a world to open the Swap Doctor settings screen.
 - Set the maximum timing window (1–1000 ms), HUD visibility, and HUD duration (1–60000 ms).
-- A green HUD line is a same-tick local timing pass; a red line is a cross-tick failure.
+- A green HUD line is a same-tick local timing candidate (not server-side confirmation); a red line is a cross-tick failure.
 - The line includes the switch kind, mouse button, signed `clickTime - switchTime`, configured threshold, and event order.
 - Pending events and the displayed result are cleared when leaving gameplay, losing focus, dying, disconnecting, or changing worlds.
 

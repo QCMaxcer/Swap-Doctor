@@ -22,15 +22,15 @@ Use a number-key or mouse-wheel hotbar change, or **F** hand swap, followed by t
 
 | Case | Expected result |
 | --- | --- |
-| Hotbar + left click, same tick, under threshold | Green `TIMING_PASS`, `HOTBAR`, `LEFT` |
-| Hotbar + right click, same tick, under threshold | Green `TIMING_PASS`, `HOTBAR`, `RIGHT` |
+| Hotbar + attack, same tick, under threshold | Green same-tick candidate, `HOTBAR`, `ATTACK`/`LEFT` |
+| Hotbar + use, same tick, under threshold | Green same-tick candidate, `HOTBAR`, `USE`/`RIGHT` |
 | F hand swap + left/right click, same tick | Green `TIMING_PASS`, `HAND_SWAP` |
 | Either order, exactly at the threshold | Green pass (inclusive boundary) |
 | Either order, over the threshold in the same tick | No result (stale events expire silently) |
 | Either order, within the time window but in adjacent ticks | Red `TIMING_FAIL_CROSS_TICK` |
 | Two possible matches near one event | Confirm nearest event is consumed once; no event is reused |
 
-Check that the HUD shows the signed millisecond delta, threshold, and either “switch first” or “click first”.
+Check that the HUD shows the signed millisecond delta, threshold, action type, and either “switch first” or “click first”. The green state is a client-side timing candidate, not server-side confirmation of mixed attributes.
 
 ## Filtering and lifecycle
 
@@ -44,4 +44,4 @@ Record the client version, Java version, config file contents, and a screenshot 
 
 - `./gradlew clean check build --no-daemon` — passed.
 - `./gradlew runClient --no-daemon` — reached the render-thread/title startup without Swap Doctor entrypoint or mixin errors; interactive cases above still require a playable in-world session.
-- Artifact SHA-256 (`build/libs/swap-doctor-1.0.0.jar`): `67310A0A438DD6A1510BD4EC59B5990434C676E7C9C822E88D0F495B70E0A618`.
+- Artifact SHA-256 (`build/libs/swap-doctor-1.0.0.jar`): `6C4B299B688E94E9B1CEBA04C4FD55BD947D880BE3B458F2C0E164CB4B648B9A`.

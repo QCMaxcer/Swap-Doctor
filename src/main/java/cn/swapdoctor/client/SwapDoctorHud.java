@@ -1,6 +1,7 @@
 package cn.swapdoctor.client;
 
 import cn.swapdoctor.core.ActionButton;
+import cn.swapdoctor.core.ActionKind;
 import cn.swapdoctor.core.SwapKind;
 import cn.swapdoctor.core.TimingResult;
 import java.util.Locale;
@@ -59,8 +60,9 @@ public final class SwapDoctorHud implements HudElement {
                 ? "swapdoctor.hud.timing_pass"
                 : "swapdoctor.hud.timing_fail_cross_tick";
         return Component.translatable(statusKey,
-                Component.translatable(swapKey(result.switchEvent().kind())),
+                Component.translatable(actionKey(result.actionEvent().kind())),
                 Component.translatable(buttonKey(result.actionEvent().button())),
+                Component.translatable(swapKey(result.switchEvent().kind())),
                 formatDelta(result.deltaMs()),
                 thresholdMs,
                 Component.translatable(directionKey(result.direction())));
@@ -72,5 +74,9 @@ public final class SwapDoctorHud implements HudElement {
 
     private static String buttonKey(ActionButton button) {
         return button == ActionButton.LEFT ? "swapdoctor.button.left" : "swapdoctor.button.right";
+    }
+
+    private static String actionKey(ActionKind kind) {
+        return kind == ActionKind.ATTACK ? "swapdoctor.action.attack" : "swapdoctor.action.use";
     }
 }

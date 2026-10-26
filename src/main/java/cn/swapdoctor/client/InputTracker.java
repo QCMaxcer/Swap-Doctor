@@ -3,6 +3,7 @@ package cn.swapdoctor.client;
 import cn.swapdoctor.config.ConfigStore;
 import cn.swapdoctor.core.ActionButton;
 import cn.swapdoctor.core.ActionEvent;
+import cn.swapdoctor.core.ActionKind;
 import cn.swapdoctor.core.SwapKind;
 import cn.swapdoctor.core.SwapMatcher;
 import cn.swapdoctor.core.SwitchEvent;
@@ -40,9 +41,22 @@ public final class InputTracker {
     public void endInputContext() { inputContext = false; }
 
     public void recordMousePress(ActionButton button, long eventTick, long nanoTime) {
+        recordAction(button, button == ActionButton.LEFT ? ActionKind.ATTACK : ActionKind.USE, eventTick, nanoTime);
+    }
+
+    public void recordAttack(long eventTick, long nanoTime) {
+        recordAction(ActionButton.LEFT, ActionKind.ATTACK, eventTick, nanoTime);
+    }
+
+    public void recordUse(long eventTick, long nanoTime) {
+        recordAction(ActionButton.RIGHT, ActionKind.USE, eventTick, nanoTime);
+    }
+
+    public void recordAction(ActionButton button, ActionKind kind, long eventTick, long nanoTime) {
         refreshGate();
         if (!gate.allow()) return;
-        matcher.onAction(new ActionEvent(nanoTime, eventTick, button)).ifPresent(result -> latest = Optional.of(result));
+        matcher.onAction(new ActionEvent(nanoTime, eventTick, button, kind))
+                .ifPresent(result -> latest = Optional.of(result));
     }
 
     public void recordHotbarSwitch(int fromSlot, int toSlot, long eventTick, long nanoTime) {
