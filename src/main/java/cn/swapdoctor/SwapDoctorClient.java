@@ -6,6 +6,6 @@ import net.fabricmc.api.ClientModInitializer;
 public final class SwapDoctorClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-        // Feature registration is implemented in subsequent tasks.
+        cn.swapdoctor.client.SwapDoctorClient.initialize();
     }
 }

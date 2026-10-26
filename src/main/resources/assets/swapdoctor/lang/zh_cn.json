@@ -1,0 +1,17 @@
+{
+  "key.swapdoctor.open_config": "打开 Swap Doctor 设置",
+  "key.categories.swapdoctor.key_category": "Swap Doctor",
+  "screen.swapdoctor.title": "Swap Doctor 设置",
+  "category.swapdoctor.general": "计时与 HUD",
+  "option.swapdoctor.max_delay": "最大计时窗口（毫秒）",
+  "option.swapdoctor.hud_enabled": "显示计时 HUD",
+  "option.swapdoctor.hud_duration": "HUD 显示时长（毫秒）",
+  "swapdoctor.hud.timing_pass": "Swap Doctor | %s + %s | %s 毫秒 / 阈值 %s 毫秒 | %s",
+  "swapdoctor.hud.timing_fail_cross_tick": "Swap Doctor | %s + %s | %s 毫秒 / 阈值 %s 毫秒 | %s（跨 tick 失败）",
+  "swapdoctor.swap.hotbar": "快捷栏切换",
+  "swapdoctor.swap.hand_swap": "主副手交换",
+  "swapdoctor.button.left": "左键",
+  "swapdoctor.button.right": "右键",
+  "swapdoctor.direction.switch_first": "先切换后点击",
+  "swapdoctor.direction.click_first": "先点击后切换"
+}

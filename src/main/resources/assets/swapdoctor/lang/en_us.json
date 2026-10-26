@@ -1,0 +1,17 @@
+{
+  "key.swapdoctor.open_config": "Open Swap Doctor settings",
+  "key.categories.swapdoctor.key_category": "Swap Doctor",
+  "screen.swapdoctor.title": "Swap Doctor Settings",
+  "category.swapdoctor.general": "Timing and HUD",
+  "option.swapdoctor.max_delay": "Maximum timing window (ms)",
+  "option.swapdoctor.hud_enabled": "Show timing HUD",
+  "option.swapdoctor.hud_duration": "HUD display duration (ms)",
+  "swapdoctor.hud.timing_pass": "Swap Doctor | %s + %s | %s ms / %s ms | %s",
+  "swapdoctor.hud.timing_fail_cross_tick": "Swap Doctor | %s + %s | %s ms / %s ms | %s (cross-tick)",
+  "swapdoctor.swap.hotbar": "hotbar",
+  "swapdoctor.swap.hand_swap": "hand swap",
+  "swapdoctor.button.left": "left click",
+  "swapdoctor.button.right": "right click",
+  "swapdoctor.direction.switch_first": "switch first",
+  "swapdoctor.direction.click_first": "click first"
+}
