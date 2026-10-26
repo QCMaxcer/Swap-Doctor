@@ -23,7 +23,14 @@ class PendingActionInputsTest {
     void discardsInputsFromEarlierTicks() {
         PendingActionInputs pending = new PendingActionInputs();
         pending.add(ActionKind.ATTACK, 3, 100L);
-        pending.discardBefore(4);
+        pending.discardBefore(5);
         assertTrue(pending.consume(ActionKind.ATTACK, 3).isEmpty());
+    }
+
+    @Test
+    void allowsOneTickProcessingDelayWithoutLosingPhysicalTimestamp() {
+        PendingActionInputs pending = new PendingActionInputs();
+        pending.add(ActionKind.ATTACK, 7, 100L);
+        assertEquals(OptionalLong.of(100L), pending.consume(ActionKind.ATTACK, 8));
     }
 }

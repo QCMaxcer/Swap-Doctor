@@ -17,7 +17,7 @@ final class PendingActionInputs {
         Iterator<Pending> iterator = pending.iterator();
         while (iterator.hasNext()) {
             Pending value = iterator.next();
-            if (value.kind == kind && value.tick == tick) {
+            if (value.kind == kind && value.tick <= tick && tick - value.tick <= 1) {
                 iterator.remove();
                 return OptionalLong.of(value.nanoTime);
             }
@@ -26,7 +26,7 @@ final class PendingActionInputs {
     }
 
     void discardBefore(long tick) {
-        pending.removeIf(value -> value.tick < tick);
+        pending.removeIf(value -> value.tick < tick - 1);
     }
 
     void clear() {

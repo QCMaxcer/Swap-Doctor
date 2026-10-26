@@ -17,6 +17,7 @@ public final class InputTracker {
     public static final InputTracker INSTANCE = new InputTracker();
     private final InputGate gate = new InputGate();
     private final PendingActionInputs pendingActions = new PendingActionInputs();
+    private final PendingSwitchInputs pendingSwitches = new PendingSwitchInputs();
     private SwapMatcher matcher;
     private Optional<TimingResult> latest = Optional.empty();
     private long tickId;
@@ -30,6 +31,7 @@ public final class InputTracker {
     public void beginTick(Minecraft client) {
         tickId++;
         pendingActions.discardBefore(tickId);
+        pendingSwitches.discardBefore(tickId);
         refreshGate();
         if (!gate.allow()) clearMatcherState();
     }
@@ -69,7 +71,8 @@ public final class InputTracker {
     public void recordHotbarSwitch(int fromSlot, int toSlot, long eventTick, long nanoTime) {
         refreshGate();
         if (!inputContext || !gate.allow() || fromSlot == toSlot) return;
-        matcher.onSwitch(new SwitchEvent(nanoTime, eventTick, SwapKind.HOTBAR))
+        long measuredNanoTime = pendingSwitches.consume(eventTick).orElse(nanoTime);
+        matcher.onSwitch(new SwitchEvent(measuredNanoTime, eventTick, SwapKind.HOTBAR))
                 .ifPresent(result -> latest = Optional.of(result));
     }
 
@@ -83,8 +86,15 @@ public final class InputTracker {
     public void recordHandSwap(long eventTick, long nanoTime) {
         refreshGate();
         if (!inputContext || !gate.allow()) return;
-        matcher.onSwitch(new SwitchEvent(nanoTime, eventTick, SwapKind.HAND_SWAP))
+        long measuredNanoTime = pendingSwitches.consume(eventTick).orElse(nanoTime);
+        matcher.onSwitch(new SwitchEvent(measuredNanoTime, eventTick, SwapKind.HAND_SWAP))
                 .ifPresent(result -> latest = Optional.of(result));
+    }
+
+    public void recordRawSwitchKey(long eventTick, long nanoTime) {
+        refreshGate();
+        if (!gate.allow()) return;
+        pendingSwitches.add(eventTick, nanoTime);
     }
 
     public void clearState() {
@@ -94,13 +104,23 @@ public final class InputTracker {
     }
 
     public Optional<TimingResult> latestResult() { return latest; }
-    public void setThreshold(int maxDelayMs) { matcher = new SwapMatcher(maxDelayMs); latest = Optional.empty(); pendingActions.clear(); }
+    public void setThreshold(int maxDelayMs) {
+        matcher = new SwapMatcher(maxDelayMs);
+        latest = Optional.empty();
+        pendingActions.clear();
+        pendingSwitches.clear();
+    }
 
     static boolean hasScrollDelta(double verticalDelta) {
         return Double.isFinite(verticalDelta) && verticalDelta != 0.0;
     }
 
-    private void clearMatcherState() { matcher.reset(); latest = Optional.empty(); pendingActions.clear(); }
+    private void clearMatcherState() {
+        matcher.reset();
+        latest = Optional.empty();
+        pendingActions.clear();
+        pendingSwitches.clear();
+    }
 
     private void refreshGate() {
         try {
