@@ -2,8 +2,7 @@
   "required": true,
   "package": "cn.swapdoctor.mixin",
   "compatibilityLevel": "JAVA_21",
-  "client": [],
-  "injectors": {
-    "defaultRequire": 1
-  }
+  "client": ["MouseHandlerMixin", "InventoryMixin", "MinecraftKeybindMixin", "MinecraftLifecycleMixin", "LivingEntityMixin"],
+  "injectors": {"defaultRequire": 1}
 }
+
