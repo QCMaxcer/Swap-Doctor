@@ -18,5 +18,3 @@ public final class LivingEntityMixin {
         }
     }
 }
-
-

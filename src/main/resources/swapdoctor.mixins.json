@@ -5,4 +5,3 @@
   "client": ["MouseHandlerMixin", "InventoryMixin", "MinecraftKeybindMixin", "MinecraftLifecycleMixin", "LivingEntityMixin"],
   "injectors": {"defaultRequire": 1}
 }
-
