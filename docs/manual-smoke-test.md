@@ -30,7 +30,7 @@ Use a number-key or mouse-wheel hotbar change, or **F** hand swap, followed by t
 | Either order, within the time window but in adjacent ticks | Red `TIMING_FAIL_CROSS_TICK` |
 | Two possible matches near one event | Confirm nearest event is consumed once; no event is reused |
 
-Check that the HUD shows the signed millisecond delta, threshold, action type, and either “switch first” or “click first”. The green state is a client-side timing candidate, not server-side confirmation of mixed attributes.
+Check that the HUD shows only the signed millisecond delta. The green state is a client-side timing candidate, not server-side confirmation of mixed attributes.
 
 ## Filtering and lifecycle
 
@@ -44,4 +44,4 @@ Record the client version, Java version, config file contents, and a screenshot 
 
 - `./gradlew clean check build --no-daemon` — passed.
 - `./gradlew runClient --no-daemon` — reached the render-thread/title startup without Swap Doctor entrypoint or mixin errors; interactive cases above still require a playable in-world session.
-- Artifact SHA-256 (`build/libs/swap-doctor-1.0.0.jar`): `6C4B299B688E94E9B1CEBA04C4FD55BD947D880BE3B458F2C0E164CB4B648B9A`.
+- Artifact SHA-256 (`build/libs/swap-doctor-1.0.0.jar`): `CCBFE9AF6F2D251CA886EE0D2912F84CBEBA7D7EA1CE9BB877682CE51F1B1981`.
