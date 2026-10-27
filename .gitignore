@@ -3,6 +3,7 @@ build/
 out/
 .idea/
 *.iml
-
 run/
 logs/
+.superpowers/
+docs/superpowers/

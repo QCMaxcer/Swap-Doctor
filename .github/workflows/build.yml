@@ -1,0 +1,37 @@
+name: 构建检查
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: 设置 Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: gradle
+      - name: 授予 Gradle Wrapper 执行权限
+        run: chmod +x ./gradlew
+      - name: 运行测试和构建
+        run: ./gradlew clean check build --no-daemon
+      - name: 上传构建产物
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: actions/upload-artifact@v4
+        with:
+          name: swap-doctor-${{ github.ref_name }}
+          path: |
+            build/libs/*.jar
+          if-no-files-found: error
+          retention-days: 30

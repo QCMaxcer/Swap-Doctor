@@ -13,6 +13,7 @@ base {
 repositories {
     maven { name = 'Shedaniel'; url = 'https://maven.shedaniel.me/' }
     maven { name = 'TerraformersMC'; url = 'https://maven.terraformersmc.com/releases' }
+    maven { name = 'Xander'; url = 'https://maven.isxander.dev/releases' }
 }
 
 dependencies {
@@ -20,8 +21,10 @@ dependencies {
     mappings loom.officialMojangMappings()
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
-    modImplementation "me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}"
+    modImplementation "dev.isxander:yet-another-config-lib:${project.yacl_version}"
     modCompileOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.11.0'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.11.0'
 }
 
 processResources {
@@ -57,9 +60,5 @@ publishing {
     }
 }
 
-dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.11.0'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.11.0'
-}
 test { useJUnitPlatform() }
 

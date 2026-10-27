@@ -8,6 +8,7 @@ import cn.swapdoctor.core.SwapKind;
 import cn.swapdoctor.core.SwapMatcher;
 import cn.swapdoctor.core.SwitchEvent;
 import cn.swapdoctor.core.TimingResult;
+import cn.swapdoctor.core.TimingHudSnapshot;
 import java.util.Optional;
 import java.util.OptionalLong;
 import net.minecraft.client.Minecraft;
@@ -19,7 +20,7 @@ public final class InputTracker {
     private final PendingActionInputs pendingActions = new PendingActionInputs();
     private final PendingSwitchInputs pendingSwitches = new PendingSwitchInputs();
     private SwapMatcher matcher;
-    private Optional<TimingResult> latest = Optional.empty();
+    private Optional<TimingHudSnapshot> latest = Optional.empty();
     private long tickId;
     private boolean inputContext;
 
@@ -65,7 +66,7 @@ public final class InputTracker {
         OptionalLong rawInputTime = pendingActions.consume(kind, eventTick);
         long measuredNanoTime = rawInputTime.orElse(nanoTime);
         matcher.onAction(new ActionEvent(measuredNanoTime, eventTick, button, kind))
-                .ifPresent(result -> latest = Optional.of(result));
+                .ifPresent(result -> latest = Optional.of(new TimingHudSnapshot(result, System.nanoTime())));
     }
 
     public void recordHotbarSwitch(int fromSlot, int toSlot, long eventTick, long nanoTime) {
@@ -73,14 +74,14 @@ public final class InputTracker {
         if (!inputContext || !gate.allow() || fromSlot == toSlot) return;
         long measuredNanoTime = pendingSwitches.consume(eventTick).orElse(nanoTime);
         matcher.onSwitch(new SwitchEvent(measuredNanoTime, eventTick, SwapKind.HOTBAR))
-                .ifPresent(result -> latest = Optional.of(result));
+                .ifPresent(result -> latest = Optional.of(new TimingHudSnapshot(result, System.nanoTime())));
     }
 
     public void recordHotbarScroll(double verticalDelta, long eventTick, long nanoTime) {
         refreshGate();
         if (!hasScrollDelta(verticalDelta) || !gate.allow()) return;
         matcher.onSwitch(new SwitchEvent(nanoTime, eventTick, SwapKind.HOTBAR))
-                .ifPresent(result -> latest = Optional.of(result));
+                .ifPresent(result -> latest = Optional.of(new TimingHudSnapshot(result, System.nanoTime())));
     }
 
     public void recordHandSwap(long eventTick, long nanoTime) {
@@ -88,7 +89,7 @@ public final class InputTracker {
         if (!inputContext || !gate.allow()) return;
         long measuredNanoTime = pendingSwitches.consume(eventTick).orElse(nanoTime);
         matcher.onSwitch(new SwitchEvent(measuredNanoTime, eventTick, SwapKind.HAND_SWAP))
-                .ifPresent(result -> latest = Optional.of(result));
+                .ifPresent(result -> latest = Optional.of(new TimingHudSnapshot(result, System.nanoTime())));
     }
 
     public void recordRawSwitchKey(long eventTick, long nanoTime) {
@@ -103,7 +104,8 @@ public final class InputTracker {
         gate.clear();
     }
 
-    public Optional<TimingResult> latestResult() { return latest; }
+    public Optional<TimingResult> latestResult() { return latest.map(TimingHudSnapshot::result); }
+    public Optional<TimingHudSnapshot> latestSnapshot() { return latest; }
     public void setThreshold(int maxDelayMs) {
         matcher = new SwapMatcher(maxDelayMs);
         latest = Optional.empty();

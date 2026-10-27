@@ -4,8 +4,8 @@ public final class SwapMatcher {
  private final long maxDelayNanos;
  private final List<SwitchEvent> switches=new ArrayList<>();
  private final List<ActionEvent> actions=new ArrayList<>();
- public SwapMatcher(){this(100);}
- public SwapMatcher(long maxDelayMs){ if(maxDelayMs<1||maxDelayMs>1000) throw new IllegalArgumentException("maxDelayMs"); this.maxDelayNanos=maxDelayMs*1_000_000L; }
+ public SwapMatcher(){this(50);}
+ public SwapMatcher(long maxDelayMs){ if(maxDelayMs<1||maxDelayMs>500) throw new IllegalArgumentException("maxDelayMs"); this.maxDelayNanos=maxDelayMs*1_000_000L; }
  public Optional<TimingResult> onSwitch(SwitchEvent e){ Objects.requireNonNull(e); ActionEvent a=nearestAction(e.nanoTime()); if(a==null){switches.add(e); return Optional.empty();} actions.remove(a); return Optional.of(result(e,a)); }
  public Optional<TimingResult> onAction(ActionEvent e){ Objects.requireNonNull(e); SwitchEvent s=nearestSwitch(e.nanoTime()); if(s==null){actions.add(e); return Optional.empty();} switches.remove(s); return Optional.of(result(s,e)); }
  private ActionEvent nearestAction(long t){ ActionEvent best=null; long d=Long.MAX_VALUE; for(ActionEvent e:actions){long x=Math.abs(e.nanoTime()-t); if(x<=maxDelayNanos&&x<d){best=e;d=x;}} return best; }

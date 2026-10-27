@@ -1,48 +1,56 @@
-# Swap Doctor manual smoke test
+# Swap Doctor 人工验收手册
 
-This checklist validates the client-only timing behavior in a Minecraft 1.21.11 Fabric client.
+本清单用于验证 Minecraft 1.21.11 Fabric 客户端中的本地 timing 行为。它不替代服务器端效果验证，也不代表客户端结果等同于伤害或属性结果。
 
-## Launch
+## 启动
 
-1. Run `./gradlew runClient` with Java 21 or a newer JDK that supports `--release 21`.
-2. Create or enter a local world and confirm the normal HUD is visible.
-3. Press **K** and confirm the Cloth Config screen opens without Mod Menu.
+1. 使用 Java 25 JDK 执行 `./gradlew runClient`（项目源码仍以 Java 21 目标编译）。
+2. 创建或进入一个本地世界，确认游戏正常显示 HUD。
+3. 按 **K**，确认即使未安装 Mod Menu 也能打开 YACL 设置界面。
 
-## Settings and persistence
+## 设置与持久化
 
-- Set the maximum timing window to `1`, save, reopen the screen, and confirm it remains `1`.
-- Set the maximum timing window to `1000`, save, reopen, and confirm it remains `1000`.
-- Toggle HUD visibility off/on and confirm the next result is hidden/shown accordingly.
-- Confirm “Show decimal milliseconds” is off by default and displays rounded integer milliseconds; enable it to display three decimal places.
-- Change HUD duration, save, restart the client, and confirm the value persists in `config/swapdoctor.json`.
-- If Mod Menu is installed, open Swap Doctor's config button and confirm it opens the same screen.
+- 将最大时间窗口设置为 `1`，保存、重新打开设置，确认仍为 `1`。
+- 将最大时间窗口设置为 `500`，保存、重新打开设置，确认仍为 `500`；确认默认值为 `50`。
+- 分别切换数据 HUD 与刻度 HUD，确认只影响对应 HUD。
+- 分别切换持续显示和即时显示模式，确认即时模式在结果后淡出。
+- 确认“小数毫秒”默认关闭并显示四舍五入整数；打开后显示三位小数。
+- 修改两个 HUD 的淡出时长（1–3000 ms）和刻度宽度（30–300，默认 120），重启客户端后确认 `config/swapdoctor.json` 中的值保持不变。
+- 修改刻度/指针长度倍率和厚度倍率（0.1x–1.0x，0.05x 步进，默认 0.5x），重启后确认值保持不变；验证刻度和指针同步变化。
+- 确认刻度端点默认显示 `-50` 与 `+50`；切换“显示刻度端点值”后只有端点标签消失，刻度、中心线和指针仍在。
+- 确认中心线垂直平分刻度；确认默认指针比旧版基线更细。
+- 打开 HUD 布局编辑器，拖动两个预览、保存并重新打开，确认位置保持；测试取消和重置。
+- 切换正方向，确认数据符号和刻度方向同时反转。
+- 如果安装了 Mod Menu，打开 Swap Doctor 配置按钮，确认进入同一设置界面。
 
-## Input and timing matrix
+## 输入与 timing 矩阵
 
-Use a number-key or mouse-wheel hotbar change, or **F** hand swap, followed by the listed mouse input. Repeat with the mouse input first.
+使用数字键或鼠标滚轮切换快捷栏，或按 **F** 交换双手，然后进行下列鼠标输入；再反向重复“先鼠标、后切换”。
 
-| Case | Expected result |
+| 场景 | 预期结果 |
 | --- | --- |
-| Hotbar + attack, same tick, under threshold | Green same-tick candidate, `HOTBAR`, `ATTACK`/`LEFT` |
-| Hotbar + use, same tick, under threshold | Green same-tick candidate, `HOTBAR`, `USE`/`RIGHT` |
-| F hand swap + left/right click, same tick | Green `TIMING_PASS`, `HAND_SWAP` |
-| Either order, exactly at the threshold | Green pass (inclusive boundary) |
-| Either order, over the threshold in the same tick | No result (stale events expire silently) |
-| Either order, within the time window but in adjacent ticks | Red `TIMING_FAIL_CROSS_TICK` |
-| Two possible matches near one event | Confirm nearest event is consumed once; no event is reused |
+| 快捷栏 + 攻击，同 tick 且低于阈值 | 绿色同 tick 候选，显示 `HOTBAR` 和 `ATTACK`/`LEFT` |
+| 快捷栏 + 使用，同 tick 且低于阈值 | 绿色同 tick 候选，显示 `HOTBAR` 和 `USE`/`RIGHT` |
+| F 交换双手 + 左/右键，同 tick | 绿色 `TIMING_PASS`，显示 `HAND_SWAP` |
+| 任意顺序，恰好等于阈值 | 绿色通过（边界包含） |
+| 任意顺序，同 tick 但超过阈值 | 无结果，过期事件静默清理 |
+| 任意顺序，时间窗口内但相邻 tick | 红色 `TIMING_FAIL_CROSS_TICK` |
+| 一个事件有两个候选 | 最近候选只消费一次，事件不重复使用 |
 
-Check that the HUD shows only the signed millisecond delta. The green state is a client-side timing candidate, not server-side confirmation of mixed attributes.
+确认数据 HUD 显示有符号毫秒间隔，刻度指针落在对应位置。绿色状态只是客户端 timing 候选，不是服务器端混合属性确认。确认刻度 HUD 完全透明，仅显示刻度、标签、中心线和指针。
 
-## Filtering and lifecycle
+## 过滤与生命周期
 
-- Repeat clicks while a screen, chat, pause menu, or lost window focus is active: no result.
-- Change an unrelated inventory slot: no result.
-- Die, disconnect, change world, or leave/re-enter gameplay with a pending event: pending state and HUD result clear.
+- 在设置界面、聊天、暂停菜单或窗口失去焦点时重复点击：不应产生结果。
+- 切换无关的背包槽位：不应产生结果。
+- 死亡、断开连接、切换世界或离开/重新进入游戏时：待匹配事件和 HUD 结果应清理。
 
-## Evidence log
+## 证据记录
 
-Record the client version, Java version, config file contents, and a screenshot of each boundary/failure case. Automated verification for this checkout:
+记录客户端版本、Java 版本、配置文件内容和边界/失败场景截图。自动化验证命令：
 
-- `./gradlew clean check build --no-daemon` — passed.
-- `./gradlew runClient --no-daemon` — reached the render-thread/title startup without Swap Doctor entrypoint or mixin errors; interactive cases above still require a playable in-world session.
-- Artifact SHA-256 (`build/libs/swap-doctor-1.0.0.jar`): `61A8D2080E6D07103C870B1C2283262B65D95418A25E1F7DF4A0276CFEA98111`.
+```bash
+./gradlew clean check build --no-daemon
+```
+
+真实游戏中的交互矩阵需要在可操作的本地客户端中手动完成；构建通过不等于服务器端效果已验证。发布时应以同一提交重新构建并记录实际 JAR SHA-256。
