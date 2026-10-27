@@ -16,7 +16,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: 设置 Java 21
+      - name: 设置 Java 25（源码目标 Java 21）
         uses: actions/setup-java@v4
         with:
           distribution: temurin
