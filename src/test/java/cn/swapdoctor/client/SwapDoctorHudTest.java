@@ -8,9 +8,16 @@ import org.junit.jupiter.api.Test;
 class SwapDoctorHudTest {
     @Test
     void formatsSignedMillisecondsWithThreeDecimals() {
-        assertEquals("+12.340 ms", SwapDoctorHud.formatDelta(12.34));
-        assertEquals("-7.000 ms", SwapDoctorHud.formatDelta(-7.0));
-        assertEquals("+0.004 ms", SwapDoctorHud.formatDelta(0.004));
+        assertEquals("+12.340 ms", SwapDoctorHud.formatDelta(12.34, true));
+        assertEquals("-7.000 ms", SwapDoctorHud.formatDelta(-7.0, true));
+        assertEquals("+0.004 ms", SwapDoctorHud.formatDelta(0.004, true));
+    }
+
+    @Test
+    void formatsSignedMillisecondsAsIntegerByDefault() {
+        assertEquals("+12 ms", SwapDoctorHud.formatDelta(12.34, false));
+        assertEquals("-7 ms", SwapDoctorHud.formatDelta(-7.0, false));
+        assertEquals("-0 ms", SwapDoctorHud.formatDelta(-0.004, false));
     }
 
     @Test

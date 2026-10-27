@@ -13,6 +13,7 @@ This checklist validates the client-only timing behavior in a Minecraft 1.21.11 
 - Set the maximum timing window to `1`, save, reopen the screen, and confirm it remains `1`.
 - Set the maximum timing window to `1000`, save, reopen, and confirm it remains `1000`.
 - Toggle HUD visibility off/on and confirm the next result is hidden/shown accordingly.
+- Confirm “Show decimal milliseconds” is off by default and displays rounded integer milliseconds; enable it to display three decimal places.
 - Change HUD duration, save, restart the client, and confirm the value persists in `config/swapdoctor.json`.
 - If Mod Menu is installed, open Swap Doctor's config button and confirm it opens the same screen.
 
@@ -44,4 +45,4 @@ Record the client version, Java version, config file contents, and a screenshot 
 
 - `./gradlew clean check build --no-daemon` — passed.
 - `./gradlew runClient --no-daemon` — reached the render-thread/title startup without Swap Doctor entrypoint or mixin errors; interactive cases above still require a playable in-world session.
-- Artifact SHA-256 (`build/libs/swap-doctor-1.0.0.jar`): `D15C6F885783D536D4F61475527F7C49FD267125D22C36903252C4B82AB04BEA`.
+- Artifact SHA-256 (`build/libs/swap-doctor-1.0.0.jar`): `61A8D2080E6D07103C870B1C2283262B65D95418A25E1F7DF4A0276CFEA98111`.

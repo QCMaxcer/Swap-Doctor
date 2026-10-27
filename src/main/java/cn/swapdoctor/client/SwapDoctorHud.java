@@ -33,7 +33,7 @@ public final class SwapDoctorHud implements HudElement {
         if (age < 0 || age > config.hudDurationMs * 1_000_000L) return;
 
         Minecraft client = Minecraft.getInstance();
-        context.drawString(client.font, formatDelta(result.deltaMs()), 8, 8,
+        context.drawString(client.font, formatDelta(result.deltaMs(), config.showDecimals), 8, 8,
                 colorFor(result.status()), true);
     }
 
@@ -41,7 +41,9 @@ public final class SwapDoctorHud implements HudElement {
         return status == TimingResult.Status.TIMING_PASS ? PASS_COLOR : FAIL_COLOR;
     }
 
-    static String formatDelta(double deltaMs) {
-        return String.format(Locale.ROOT, "%+.3f ms", deltaMs);
+    static String formatDelta(double deltaMs, boolean showDecimals) {
+        if (showDecimals) return String.format(Locale.ROOT, "%+.3f ms", deltaMs);
+        long rounded = Math.round(Math.abs(deltaMs));
+        return (deltaMs < 0 ? "-" : "+") + rounded + " ms";
     }
 }

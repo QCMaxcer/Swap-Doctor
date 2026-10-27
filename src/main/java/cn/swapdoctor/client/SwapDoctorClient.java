@@ -47,6 +47,11 @@ public final class SwapDoctorClient implements ClientModInitializer {
         saveConfig();
     }
 
+    public static void setShowDecimals(boolean value) {
+        config.showDecimals = value;
+        saveConfig();
+    }
+
     public static void saveConfig() {
         config.validate();
         CONFIG_STORE.save(config);

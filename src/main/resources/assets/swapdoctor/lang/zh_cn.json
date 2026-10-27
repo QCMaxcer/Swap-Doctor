@@ -6,6 +6,7 @@
   "option.swapdoctor.max_delay": "最大计时窗口（毫秒）",
   "option.swapdoctor.hud_enabled": "显示计时 HUD",
   "option.swapdoctor.hud_duration": "HUD 显示时长（毫秒）",
+  "option.swapdoctor.show_decimals": "显示毫秒小数",
   "swapdoctor.hud.timing_pass": "Swap Doctor | 同 tick 候选 | %s（%s）+ %s | %s 毫秒 / 阈值 %s 毫秒 | %s",
   "swapdoctor.hud.timing_fail_cross_tick": "Swap Doctor | 跨 tick 失败 | %s（%s）+ %s | %s 毫秒 / 阈值 %s 毫秒 | %s",
   "swapdoctor.action.attack": "攻击",

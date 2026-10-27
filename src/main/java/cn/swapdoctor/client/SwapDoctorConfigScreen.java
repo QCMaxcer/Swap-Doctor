@@ -6,7 +6,7 @@ import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
-/** Cloth Config screen for the three persisted client settings. */
+/** Cloth Config screen for the four persisted client settings. */
 public final class SwapDoctorConfigScreen {
     private SwapDoctorConfigScreen() {
     }
@@ -34,6 +34,11 @@ public final class SwapDoctorConfigScreen {
                         Component.translatable("option.swapdoctor.hud_duration"), current.hudDurationMs, 1, 60000)
                 .setDefaultValue(1500)
                 .setSaveConsumer(SwapDoctorClient::setHudDurationMs)
+                .build());
+        category.addEntry(entries.startBooleanToggle(
+                        Component.translatable("option.swapdoctor.show_decimals"), current.showDecimals)
+                .setDefaultValue(false)
+                .setSaveConsumer(SwapDoctorClient::setShowDecimals)
                 .build());
 
         builder.setSavingRunnable(SwapDoctorClient::saveConfig);
